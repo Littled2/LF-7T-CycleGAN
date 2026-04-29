@@ -1,0 +1,31 @@
+{
+    "preprocess": {
+        "general": {
+            "output_dir": "ood-dataset",
+            "m4raw": {
+                "input_dir": "S:\\Edward\\MRI data\\M4Raw\\M4Raw_combined",
+                "domain_letter": "A"
+            }
+        },
+        "scan_types": [
+            {
+                "scan_type": "T1w",
+                "m4raw": {
+                    "search_pattern": "*_T101.h5",
+                    "axial_slice_indexes": [11, 12, 14, 14, 15, 16, 17],
+                    "coronal_slice_indexes": [],
+                    "sagittal_slice_indexes": []
+                }       
+            },
+            {
+                "scan_type": "T2w",
+                "m4raw": {
+                    "search_pattern": "*_T201.h5",
+                    "axial_slice_indexes": [11, 12, 14, 14, 15, 16, 17],
+                    "coronal_slice_indexes": [],
+                    "sagittal_slice_indexes": []
+                }       
+            }
+        ]
+    }
+}
