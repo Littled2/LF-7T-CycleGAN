@@ -1,0 +1,30 @@
+name: srddl
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+  - defaults
+
+dependencies:
+  - python=3.10
+  - numpy
+  - pandas
+  - scipy
+  - scikit-learn
+  - matplotlib
+  - seaborn
+  - pillow
+  - tqdm
+  - ipython
+  - jupyter
+  - opencv
+  - scikit-image
+  - pytorch
+  - torchvision
+  - pytorch-cuda=12.1
+  - pip
+  - pip:
+      - einops
+      - kornia
+      - patchify
+      - lpips

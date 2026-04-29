@@ -113,7 +113,9 @@ The training command for un-modified cycleGAN used in this project follow this s
 
 ### 5.2 Training SRDDL
 
-This study chose to fine-tune a pre-trained version of SRDDL to perform 0.3T to 7T translation. The code for fine-tuining and subsequent inference are included in the `model-evaluation/comparison-models/SRDDL/` folder. Instructions are written in the notebook files in this directory.
+This study chose to fine-tune a pre-trained version of SRDDL to perform 0.3T to 7T translation. The code for fine-tuining and subsequent inference are included in the `model-evaluation/comparison-models/SRDDL/` folder. Instructions to run SRDDL are written in the notebook files in that directory.
+
+Note: a separate `environment.yml` file is also provided in that folder to create a conda environment for running SRDDL.
 
 ### 5.3 Quantitative Evaluation
 
