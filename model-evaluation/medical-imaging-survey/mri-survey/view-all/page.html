@@ -1,0 +1,29 @@
+<section
+    class="flex flex-col gap-l"
+    x-data="{
+        surveyPairs: JSON.parse(localStorage.getItem('mri-survey-pairs')),
+    }"
+>
+
+    <template x-for="pair in surveyPairs">
+
+        <div class="flex gap-m">
+
+            <div>
+                <p class="text-center">Low field</p>
+                <img :src="pair.real" alt="" class="scan">
+            </div>
+            <div>
+                <p class="text-center">Enancement A</p>
+                <img :src="pair.enhancement_a" alt="" class="scan">
+            </div>
+            <div>
+                <p class="text-center">Enhancement B</p>
+                <img :src="pair.enhancement_b" alt="" class="scan">
+            </div>
+
+        </div>
+
+    </template>
+
+</section>

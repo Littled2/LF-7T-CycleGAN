@@ -1,0 +1,239 @@
+<section
+    class="flex flex-col gap-l"
+    x-data="{
+        fullscreen: null,
+        surveyPairIndex: $persist(0),
+        surveyId: localStorage.getItem('mri-survey-id'),
+        surveyPairs: JSON.parse(localStorage.getItem('mri-survey-pairs')),
+        submitting: false,
+        get surveyComplete() {
+            return this.surveyPairIndex === this.surveyPairs.length
+        },
+        get enhancement_A() {
+            return this.surveyPairs[this.surveyPairIndex]?.enhancement_a
+        },
+        get enhancement_B() {
+            return this.surveyPairs[this.surveyPairIndex]?.enhancement_b
+        },
+        get low_field() {
+            return this.surveyPairs[this.surveyPairIndex]?.real
+        },
+        get model_a() {
+            return this.surveyPairs[this.surveyPairIndex]?.model_a
+        },
+        get model_b() {
+            return this.surveyPairs[this.surveyPairIndex]?.model_b
+        } 
+    }"
+>
+
+    <!-- Check if there is a survey ID -->
+    <div
+        class="class flex flex-col gap-m card no-hover"
+        x-data="{
+            showTestFail: localStorage.getItem('mri-survey-id') === null
+        }"
+        x-show="showTestFail"
+    >
+        <h2><span class="danger">No survey ID found!</span> Your responses cannot be saved</h2>
+        
+        <a href="/mri-survey/start-here" class="button">Please click here to register</a></h1>
+    </div>
+
+
+    <div
+        class="flex flex-col gap-l"
+        x-show="surveyComplete"
+        x-data="{
+            feedbackSubmitted: false,
+            feedbackText: ''
+        }"
+    >
+        <br><br><br><br>
+        <h1>You have completed the survery.</h1>
+        <hr>
+        <form
+            x-show="!feedbackSubmitted"
+            class="flex flex-col"
+            @submit.prevent="$post({ route: '/backend/api/mri-survey/POST-submit-feedback.php', body: { surveyId, feedback: feedbackText } });"
+            @post="feedbackSubmitted = true"
+            @post-error="alert('Error: ' + ($event?.detail?.response?.statusText + ' | Something went wrong. Please contact eb968@exeter.ac.uk.'))"
+        >
+            <p>Please submit any general feedback about the images you viewed or the survey below.</p>
+            <textarea x-model="feedbackText" placeholder="Type any feedback here..."></textarea>
+            <small class="darker">Otherwise, please feel free to leave this page.</small>
+            <br>
+            <button type="submit" x-bind:disabled="!feedbackText.trim()">Submit Feedback</button>
+        </form>
+        
+        <div
+            class="flex flex-col gap-l"
+            x-show="feedbackSubmitted"
+        >
+            <p>Thank you! You can now leave this page.</p>
+            <br>
+            <br>
+            <img style="margin: auto; width: 200px;" src="https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUyZDhzamI5cmRucTdyNHgyaHl6cmV4YTY0cjlyamFuMHNkN2drZTNhciZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Ncn7y0xz7ZfAxEcEml/giphy.gif">
+            <br>
+        </div>
+    </div>
+
+
+    <div x-show="!surveyComplete" class="flex flex-col gap-l">
+
+        <h3 class="text-center">
+            Pair
+            <span x-text="surveyPairIndex"></span>
+            of
+            <span x-text="surveyPairs.length"></span>
+        </h3>
+
+        <div class="flex flex-col align-center">
+
+            <p>Low-field Input</p>
+
+            <img class="test-img" :src="low_field">
+
+        </div>
+
+
+        <div class="hf-wrapper">
+
+            <div class="flex space-between">
+                <div class="flex-1 flex justify-center flex-col gap-s align-center">
+                    <p>Enhancement A</p>
+                    <img class="test-img" :src="enhancement_A">
+                </div>
+
+                <div class="flex-1 flex justify-center flex-col gap-s align-center">
+                    <p>Enhancement B</p>
+                    <img class="test-img" :src="enhancement_B">
+                </div>
+            </div>
+
+            <div class="flex space-between">
+                <span></span>
+                <button class="fullscreen-btn" @click="fullscreen = true">⛶</button>
+            </div>
+
+
+        </div>
+
+
+        <div class="popup-wrapper" x-show="fullscreen" @click="fullscreen = null">
+            <div class="popup popup-fullscreen flex flex-col gap-l" @click.stop>
+                <div class="flex space-between">
+                    <h3>Fullscreen View. Please zoom in to examine details.</h3>
+                    <span class="pointer" @click="fullscreen = null">🗙</span>
+                </div>
+
+                <div class="flex">
+                    <div class="flex-1 flex flex-col align-center">
+                        <p class="text-center">Original (low-field)</p>
+                        <img class="fullscreen-image" :src="low_field">
+                    </div>
+                    <div class="flex-1 flex flex-col align-center">
+                        <p class="text-center">Enhancement A</p>
+                        <img class="fullscreen-image" :src="enhancement_A">
+                    </div>
+                    <div class="flex-1 flex flex-col align-center">
+                        <p class="text-center">Enhancement B</p>
+                        <img class="fullscreen-image" :src="enhancement_B">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <form
+            class="flex flex-col gap-l"
+            x-data="{
+                artefacts: null,
+                structure: null,
+                snr: null,
+                overall: null,
+                error: null
+            }"
+            @submit.prevent="$post({ route: '/backend/api/mri-survey/POST-submit-survey.php', body: { surveyId, low_field, artefacts, structure, snr, overall } }); submitting = true"
+            @post="surveyPairIndex += 1; submitting = false; window.scrollTo(0, 0); window.location.reload(); "
+            @post-error="error = 'Error: ' + $event?.detail?.response?.statusText + ' | Something went wrong. Please contact eb968@exeter.ac.uk ASAP'"
+        >
+
+            <p class="text-center">Please review the two enhancements. For question below please select the Enhancement that is the <b>BEST</b> in that category.</p>
+
+            <div class="input-row">
+                <div>
+                    <h3 class="form-title">LEAST Artefacts <a class="help" title="Click for more detail" href="/mri-survey/help">?</a></h3>
+                    <p class="darker">Are there any incorrect shapes present in the image? Select the enhancement with the <b>least</b> artefacts.</p>
+                </div>
+                <div class="flex gap-l">
+                    <div class="flex gap-s align-center max-content chip">
+                        <label for="tissue-1">Enhancement A</label>
+                        <input id="tissue-1" type="radio" :value="model_a" x-model="artefacts">
+                    </div>
+                    <div class="flex gap-s align-center max-content chip">
+                        <label for="tissue-2">Enhancement B</label>
+                        <input id="tissue-2" type="radio" :value="model_b" x-model="artefacts">
+                    </div>
+                </div>
+            </div>
+            <div class="input-row">
+                <div>
+                    <h3 class="form-title">Anatomical Structure<a class="help" title="Click for more detail" href="/mri-survey/help">?</a></h3>
+                    <p class="darker">How anatomically correct are the structures in the enhancement? Select the enhancement with the most anatomically correct structures.</p>
+                </div>
+                <div class="flex gap-l">
+                    <div class="flex gap-s align-center max-content chip">
+                        <label for="sharpness-1">Enhancement A</label>
+                        <input id="sharpness-1" type="radio" :value="model_a" x-model="structure">
+                    </div>
+                    <div class="flex gap-s align-center max-content chip">
+                        <label for="sharpness-2">Enhancement B</label>
+                        <input id="sharpness-2" type="radio" :value="model_b" x-model="structure">
+                    </div>
+                </div>
+            </div>
+            <div class="input-row">
+                <div>
+                    <h3 class="form-title">Signal-to-Noise Ratio (SNR) <a class="help" title="Click for more detail" href="/mri-survey/help">?</a></h3>
+                    <p class="darker">How clean and free from grainy noise does the image appear? Select the enhancement with the best SNR.</p>
+                </div>
+                <div class="flex gap-l">
+                    <div class="flex gap-s align-center max-content chip">
+                        <label for="snr-1">Enhancement A</label>
+                        <input id="snr-1" type="radio" :value="model_a" x-model="snr">
+                    </div>
+                    <div class="flex gap-s align-center max-content chip">
+                        <label for="snr-2">Enhancement B</label>
+                        <input id="snr-2" type="radio" :value="model_b" x-model="snr">
+                    </div>
+                </div>
+            </div>
+            <div class="input-row">
+                <div>
+                    <h3 class="form-title">Overall Image Quality <a class="help" title="Click for more detail" href="/mri-survey/help">?</a></h3>
+                    <p class="darker">How diagnostically useful is this image overall? Select the enhancement that you would feel most comfortable using.</p>
+                </div>
+                <div class="flex gap-l">
+                    <div class="flex gap-s align-center max-content chip">
+                        <label for="overall-1">Enhancement A</label>
+                        <input id="overall-1" type="radio" :value="model_a" x-model="overall">
+                    </div>
+                    <div class="flex gap-s align-center max-content chip">
+                        <label for="overall-2">Enhancement B</label>
+                        <input id="overall-2" type="radio" :value="model_b" x-model="overall">
+                    </div>
+                </div>
+            </div>
+            
+            <br>
+
+            <button type="submit">
+                <span x-show="!submitting">Submit</span>
+                <span x-show="submitting">Submitting...</span>
+            </button>
+
+        </form>
+
+    </div>
+
+</section>

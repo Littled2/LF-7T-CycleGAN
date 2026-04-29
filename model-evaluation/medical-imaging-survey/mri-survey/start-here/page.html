@@ -1,0 +1,62 @@
+<section class="flex flex-col gap-l">
+
+    <br><br><br>
+
+    <a href="/mri-survey" class="go-back">Go back</a>
+
+    <h2>Please enter your details</h2>
+
+    <form
+        class="form flex flex-col gap-m"
+        x-data="{
+            email: '',
+            name: '',
+            jobTitle: '',
+            error: null,
+            afterResponseCreated(surveyID) {
+                console.log(surveyID)
+                // Assign the survey ID to the client
+                localStorage.setItem('mri-survey-id', surveyID);
+                // Navigate to the next page
+                window.location.href = '/mri-survey/intro-page'
+            }
+        }"
+        @submit.prevent="$post({
+            route: '/backend/api/mri-survey/POST-create-survey.php',
+            body: { email, name, jobTitle }
+        })"
+        @post="afterResponseCreated(await $event.detail.response.text())"
+        @post-error="error = 'Error: ' + $event?.detail?.response?.statusText + ' | Something went wrong. Please contact eb968@exeter.ac.uk ASAP'"
+    >
+
+        <div class="form-item">
+            <div>
+                <label>Work/University Email Address</label>
+            </div>
+            <input type="email" x-model="email" placeholder="e.g. user@exeter.ac.uk" required>
+        </div>
+
+        <div class="form-item">
+            <div>
+                <label>Full Name</label>
+            </div>
+            <input type="text" x-model="name" placeholder="e.g. John Smith" required>
+        </div>
+
+        <div class="form-item">
+            <div>
+                <label>Job Title</label>
+            </div>
+            <input type="text" x-model="jobTitle" placeholder="e.g. Senior Radiologist" required>
+        </div>
+
+        <br>
+
+        <p x-text="error" x-show="error" class="danger"></p>
+
+        <button type="submit">Next</button>
+
+
+    </form>
+
+</section>
