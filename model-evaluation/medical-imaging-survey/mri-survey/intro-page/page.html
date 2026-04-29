@@ -1,0 +1,48 @@
+<section
+    class="flex flex-col gap-l"
+    x-data="{
+        loading: true,
+        surveyPairIndex: $persist(0),
+        async downloadPairs() {
+
+            let pairsResponse = await fetch('/backend/api/mri-survey/GET-survey-pairs.php')
+            let pairs = await pairsResponse.json()
+
+            localStorage.setItem('mri-survey-pairs', JSON.stringify(pairs))
+
+            this.loading = false
+        },
+        init() {
+            this.surveyPairIndex = 0
+        }
+    }"
+    x-init="downloadPairs()"
+>
+
+    <br><br><br>
+
+    <a href="/mri-survey/start-here" class="go-back">Go back</a>
+
+    <!-- Check if there is a survey ID -->
+    <div
+        class="class flex flex-col gap-m card no-hover"
+        x-data="{
+            showTestFail: localStorage.getItem('mri-survey-id') === null
+        }"
+        x-show="showTestFail"
+    >
+        <h2><span class="danger">No survey ID found!</span> Your responses cannot be saved</h2>
+        
+        <a href="/mri-survey/start-here" class="button">Please click here to register</a></h1>
+    </div>
+
+    <h1 class="text-center">Tutorial</h1>
+
+    <p class="text-center">On the next pages, you will be shown a series of enhanced image pairs, along with the original low-field scan.</p>
+
+    <img src="/resources/mri-survey/tutorial.png" style="user-select: none;">
+
+    <a x-show="!loading" href="/mri-survey/survey" class="button">Begin Survey</a>
+
+    <p class="text-darker text-center" x-show="loading">Loading pairs...</p>
+</section>
