@@ -1,0 +1,12 @@
+# Exlude all datasets from the repository and any generated files
+
+__pycache__/
+
+
+visualisations/final
+
+
+out-of-distribution-analysis/ood-dataset
+out-of-distribution-analysis/ood-dataset-results
+
+
