@@ -107,9 +107,11 @@ The required code to benchmark the proposed model against super-resolution deep 
 
 Instructions to run the un-modified CycleGAN model can be found in the [official repository](https://github.com/junyanz/pytorch-cyclegan-and-pix2pix) or in the `model-evaluation/comparison-models/pytorch-cyclegan-and-pix2pix` folder of this project. A custom dataset has been included to permit training using the same `.npy` files as LF-7T-CycleGAN.
 
-The training command for un-modified cycleGAN used in this project follow this syntax:
+The training commands for un-modified CycleGAN used in this project follow this syntax:
 
-
+```
+python train.py --dataroot [DATASET PATH] --name [MODEL NAME] --model cycle_gan --dataset_mode mri --input_nc 1 --output_nc 1 --no_flip --n_epochs 100 --n_epochs_decay 100  --batch_size 2 --no_html
+```
 
 ### 5.2 Training SRDDL
 

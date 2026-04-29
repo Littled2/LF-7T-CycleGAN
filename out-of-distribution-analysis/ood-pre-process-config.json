@@ -3,7 +3,7 @@
         "general": {
             "output_dir": "ood-dataset",
             "m4raw": {
-                "input_dir": "S:\\Edward\\MRI data\\M4Raw\\M4Raw_combined",
+                "input_dir": "S:\\Edward\\MRI-data\\M4Raw\\M4Raw_combined",
                 "domain_letter": "A"
             }
         },

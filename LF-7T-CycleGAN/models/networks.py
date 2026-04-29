@@ -327,7 +327,7 @@ class MRIGenerator(nn.Module):
 
     """
     
-    def __init__(self, input_nc=1, ngf=64):
+    def __init__(self, input_nc=1, output_nc=1, num_downs=8, ngf=64, norm_layer=None, use_dropout=False):
         super(MRIGenerator, self).__init__()
 
         # Instantiate attention and edge blocks
