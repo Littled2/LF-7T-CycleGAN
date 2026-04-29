@@ -1,3 +1,9 @@
+"""
+
+This file allows Bayesian optimisation to be run using Optuna
+
+"""
+
 import copy
 import random
 import time
@@ -192,7 +198,7 @@ def objective(trial, base_opt):
     opt.lambda_A = trial.suggest_float("lambda_A", 0.5, 14.0)
     opt.lambda_B = trial.suggest_float("lambda_B", 0.5, 14.0)
     opt.lambda_identity = trial.suggest_float("lambda_identity", 0.0, 0.5)
-    opt.lambda_per_c = trial.suggest_float("lambda_per_c", 0.1, 1.0)
+    opt.lambda_per_c =  trial.suggest_float("lambda_per_c", 0.1, 1.0)
     opt.lambda_per_s = trial.suggest_float("lambda_per_s", 0.2, 3.0)
     opt.lambda_content_adversarial = trial.suggest_float("lambda_content_adversarial", 0.2, 3.0)
     opt.lr = trial.suggest_float("lr", 5e-5,  3e-4, log=True)
@@ -203,7 +209,7 @@ def objective(trial, base_opt):
     opt.lr_decay_iters = 999_999_999
     opt.max_dataset_size = 400 # Restrict dataset size to increase speed
 
-    # Disable any logging or saving
+    # Disable any logging
     opt.print_freq = 999_999_999
     opt.display_freq = 999_999_999
     opt.save_latest_freq = 999_999_999
